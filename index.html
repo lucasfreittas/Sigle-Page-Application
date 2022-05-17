@@ -7,14 +7,54 @@
 </head>
 <body>
     <nav>
-        <a href="/">Home</a>
-        <a href="/about">Sobre</a>
-        <a href="/contact">Contato</a>
-        <a href="/404">404</a>
+        <a href="/" onclick="preventDefault()">Home</a>
+        <a href="/about" onclick="preventDefault()">Sobre</a>
+        <a href="/contact" onclick="preventDefault()">Contato</a>
+        <a href="/404" onclick="preventDefault()">404</a>
     </nav>
+    
 
-    <div id="pages"></div>
+
+    <div id="app"></div>
     
+    <script>
+
+        const routes = {
+
+            "/": "/home.html",
+            "/about": "/about.html",
+            "/contact": "/contact.html",
+            404: "/404.html"
+            
+        }
+
+        
+        function preventDefault() {
+            window.event.preventDefault();
+            window.history.pushState({}, "", event.target.href)
+
+            myRoute()
+        }
+
+        function myRoute(){
+            const {pathname} = window.location;
+            const newRoute = routes[pathname] || routes[404]
+            
+            fetch(newRoute)
+                .then(page => page.text())
+                .then(html => {
+                    document.querySelector('#app').innerHTML = html
+                })
+        
+        }
+
     
+        myRoute()
+
+        window.onpopstate = () => myRoute()
+
+
+    </script>    
 </body>
 </html>
+
